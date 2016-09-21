@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:text="Start"
         android:id="@+id/button"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:elevation="0dp" />
 
     <TextView
         android:id="@+id/textview"
