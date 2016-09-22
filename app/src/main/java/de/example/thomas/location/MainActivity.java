@@ -1,14 +1,13 @@
-package de.example.frank.location;
+package de.example.thomas.location;
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -17,8 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import java.security.Permissions;
-import java.util.List;
+
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_LOCATION = 2;
@@ -28,6 +26,7 @@ public class MainActivity extends Activity {
     // These are required for GPS services.
     private static LocationManager manager;
     private static LocationListener listener;
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +67,7 @@ public class MainActivity extends Activity {
                                         Bundle extras) {
                 Log.d(TAG, "onStatusChanged()");
             }
+
             @Override
             public void onLocationChanged(Location location) {
                 Log.d(TAG, "onLocationChanged()");
@@ -77,10 +77,12 @@ public class MainActivity extends Activity {
                     textview.append(s);
                 }
             }
+
             @Override
             public void onProviderEnabled(String provider) {
                 Log.d(TAG, "onProviderEnabled()");
             }
+
             @Override
             public void onProviderDisabled(String provider) {
                 Log.d(TAG, "onProviderDisabled()");
@@ -98,6 +100,7 @@ public class MainActivity extends Activity {
 // Log.d(TAG, "latitude: " + locNuernberg.getLatitude());
 // Log.d(TAG, "longitude: " + locNuernberg.getLongitude());
     }
+
     private void initRights() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
@@ -120,6 +123,7 @@ public class MainActivity extends Activity {
             configureButton();
         }
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -128,6 +132,7 @@ public class MainActivity extends Activity {
 // manager.requestLocationUpdates(provider, 3000, 0.001f, listener);
 // }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -136,6 +141,7 @@ public class MainActivity extends Activity {
 // manager.removeUpdates(listener);
 // }
     }
+
     // private boolean isPermissionGranted() {
 // boolean ret = false;
 // Log.d(TAG, "Permission Wert: ACCESS_FINE_LOCATION = " + Manifest.permission.ACCESS_FINE_LOCATION);
@@ -169,7 +175,7 @@ public class MainActivity extends Activity {
         switch (requestCode) {
             case 10:
                 Log.d(TAG, "onRequestPermissionsResult = 10");
-                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "grantResults contains PERMISSION_GRANTED");
                     configureButton();
                 }
@@ -182,12 +188,26 @@ public class MainActivity extends Activity {
 // }
 // }
     }
+
     private void configureButton() {
         Log.d(TAG, "configureButton called");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 // provider, minTime (refresh in msec), minDistance (>0 min m meters), locationListener
+                if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.
+                        PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 manager.requestLocationUpdates("gps", 5000, 0, listener);
                 Log.d(TAG, "setOnClickListener manager.requestLocationUpdates");
             }

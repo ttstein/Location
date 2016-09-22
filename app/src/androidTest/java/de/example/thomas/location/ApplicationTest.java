@@ -1,4 +1,4 @@
-package de.example.frank.location;
+package de.example.thomas.location;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
